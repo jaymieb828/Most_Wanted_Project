@@ -64,17 +64,17 @@ function mainMenu(person, people) {
     // Routes our application based on the user's input
     switch (displayOption) {
         case "info":
-            //! TODO #1: Utilize the displayPerson function //////////////////////////////////////////
-            // HINT: Look for a person-object stringifier utility function to help
-            let personInfo = displayPerson(person[0]);
-            alert(personInfo);
-            break;
+        displayPerson(person); 
+        mainMenu(person, people);
+        break;    
         case "family":
             //! TODO #2: Declare a findPersonFamily function //////////////////////////////////////////
             // HINT: Look for a people-collection stringifier utility function to help
-            let personFamily = findPersonFamily(person[0], people);
-            alert(personFamily);
-            break;
+        displayParents(person,people);
+        displaySpouse(person, people);
+        displaySiblings(person,people);
+        mainMenu(person, people);
+        break;
         case "descendants":
             //! TODO #3: Declare a findPersonDescendants function //////////////////////////////////////////
             // HINT: Review recursion lecture + demo for bonus user story
@@ -182,10 +182,50 @@ function yesNo(input) {
  * @returns {Boolean}           Default validation -- no logic yet.
  */
 function chars(input) {
-    input.toLocaleLowerCase()== "";
+    input.toLowerCase()== "";
     return true; // Default validation only
 }
 // End of chars()
 
 //////////////////////////////////////////* End Of Starter Code *//////////////////////////////////////////
 // Any additional functions can be written below this line 👇. Happy Coding! 😁
+function displayParents(person, people){
+    let foundPerson = people.filter(function(el){
+      if(el.id === person.parents[0] || el.id === person.parents[1]){
+        return true;
+      }
+      else{
+        return false;
+      }
+    })
+      displayFamilyInfo(foundPerson,"Parent")
+  }
+
+function displaySpouse(person, people){
+    let foundPerson = people.filter(function(el){
+      if(el.currentSpouse === person.id){
+        return true;
+      }
+      else{
+        return false;
+      }
+    })
+      displayFamilyInfo(foundPerson,"Spouse")
+  }
+  
+function displaySiblings(person, people){
+    let foundPerson = people.filter(function(el){
+    let parLength = el.parents
+      if(el.id === person.id)
+      return false;
+      else if(parLength.length < 2)
+        return false
+      else if(el.parents[0] === person.parents[0] || el.parents[0] === person.parents[1] || el.parents[1] === person.parents[0] || el.parents[1] === person.parents[1]){
+          return true;
+      }
+      else{
+        return false;
+      }
+    })
+      displayFamilyInfo(foundPerson,"Sibling")
+  }
