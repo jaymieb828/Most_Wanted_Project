@@ -64,22 +64,24 @@ function mainMenu(person, people) {
     // Routes our application based on the user's input
     switch (displayOption) {
         case "info":
-        displayPerson(person); 
-        mainMenu(person, people);
+            displayPerson(person); 
+            mainMenu(person, people);
         break;    
         case "family":
             //! TODO #2: Declare a findPersonFamily function //////////////////////////////////////////
             // HINT: Look for a people-collection stringifier utility function to help
-        displayParents(person,people);
-        displaySpouse(person, people);
-        displaySiblings(person,people);
-        mainMenu(person, people);
+            displayParents(person,people);
+            displaySpouse(person, people);
+            displaySiblings(person,people);
+            mainMenu(person, people);
+        
         break;
         case "descendants":
             //! TODO #3: Declare a findPersonDescendants function //////////////////////////////////////////
             // HINT: Review recursion lecture + demo for bonus user story
-            let personDescendants = findPersonDescendants(person[0], people);
-            alert(personDescendants);
+            displayDescendants(person, people);
+            displayPeople(showDescenants);
+            mainMenu(person, people);
             break;
         case "restart":
             // Restart app() from the very beginning
@@ -121,7 +123,7 @@ function searchByName(people) {
  * to the user in the form of an alert().
  * @param {Array} people        A collection of person objects.
  */
-function displayPeople(people) {
+ function displayPeople(people) {
     alert(
         people
             .map(function (person) {
@@ -137,17 +139,16 @@ function displayPeople(people) {
  * in order to easily send the information to the user in the form of an alert().
  * @param {Object} person       A singular object.
  */
-function displayPerson(person) {
-    let personInfo = `First Name: ${person.firstName}\n`;
-    personInfo += `Last Name: ${person.lastName}\n`;
+ function displayPerson(person){
+    let personInfo = "First Name: " + person.firstName + "\n";
+    personInfo += "Last Name: " + person.lastName + "\n";
     personInfo += "Gender: " + person.gender + "\n";
     personInfo += "Weight: " + person.weight + "\n";
     personInfo += "Eye Color: " + person.eyeColor + "\n";
     personInfo += "Height: " + person.height + "\n";
     personInfo += "occupation: " + person.occupation + "\n";
     alert(personInfo);
-}
-// End of displayPerson()
+  
 
 /**
  * This function's purpose is twofold:
@@ -189,6 +190,18 @@ function chars(input) {
 
 //////////////////////////////////////////* End Of Starter Code *//////////////////////////////////////////
 // Any additional functions can be written below this line 👇. Happy Coding! 😁
+
+
+function displayFamilyInfo(foundPerson, relationship){
+    if(foundPerson.length < 1){
+      alert("This person has no " + relationship + ".");
+    }
+    else{
+    alert(foundPerson.map(function(person){
+     return relationship + ": " + person.firstName + " " + person.lastName;
+   }).join("\n"));
+    }}
+   
 function displayParents(person, people){
     let foundPerson = people.filter(function(el){
       if(el.id === person.parents[0] || el.id === person.parents[1]){
@@ -228,4 +241,29 @@ function displaySiblings(person, people){
       }
     })
       displayFamilyInfo(foundPerson,"Sibling")
+  }
+
+
+let showDescenants = [] 
+function displayDescendants(person, people){
+  let personsID = person.id;
+  let foundPerson = people.filter(function(person){
+  if(person.parents.includes(personsID)){
+    if(person != showDescenants){
+        showDescenants.push(person);
+      return true;
+    }
+    else{
+        return true
+    }
+  }
+  else{
+    return false;
+   }
+  })
+    for(let i = foundPerson.length - 1; i >= 0; i--){
+      displayDescendants(foundPerson[i],people);
+      
+     }
+     
   }
