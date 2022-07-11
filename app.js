@@ -72,9 +72,11 @@ function mainMenu(person, people) {
         case "family":
             //! TODO #2: Declare a findPersonFamily function //////////////////////////////////////////
             // HINT: Look for a people-collection stringifier utility function to help
-            let personFamily = findPersonFamily(person[0], people);
-            alert(personFamily);
-            break;
+        displayParents(person,people);
+        displaySpouse(person, people);
+        displaySiblings(person,people);
+        alert(person.people)
+            break;   
         case "descendants":
             //! TODO #3: Declare a findPersonDescendants function //////////////////////////////////////////
             // HINT: Review recursion lecture + demo for bonus user story
@@ -190,3 +192,58 @@ function chars(input) {
 
 //////////////////////////////////////////* End Of Starter Code *//////////////////////////////////////////
 // Any additional functions can be written below this line 👇. Happy Coding! 😁
+
+//Family search functions.
+
+
+function displayFamilyInfo(foundPerson, relationship){
+    if(foundPerson.length < 1){
+      alert("This person has no " + relationship + ".");
+    }
+    else{
+    alert(foundPerson.map(function(person){
+     return relationship + ": " + person.firstName + " " + person.lastName;
+   }).join("\n"));
+    }}
+
+function displaySpouse(person, people){
+    let foundPerson = people.filter(function(el){
+      if(el.currentSpouse === person.id){
+        return true;
+      }
+      else{
+        return false;
+      }
+    })
+      displayFamilyInfo(foundPerson,"Spouse")
+  }
+  
+function displaySiblings(person, people){
+    let foundPerson = people.filter(function(el){
+    let parLength = el.parents
+      if(el.id === person.id)
+      return false;
+      else if(parLength.length < 2)
+        return false
+      else if(el.parents[0] === person.parents[0] || el.parents[0] === person.parents[1] || el.parents[1] === person.parents[0] || el.parents[1] === person.parents[1]){
+          return true;
+      }
+      else{
+        return false;
+      }
+    })
+      displayFamilyInfo(foundPerson,"Sibling")
+  }
+  
+function displayParents(person, people){
+    let foundPerson = people.filter(function(el){
+      if(el.id === person.parents[0] || el.id === person.parents[1]){
+        return true;
+      }
+      else{
+        return false;
+      }
+    })
+      displayFamilyInfo(foundPerson,"Parent")
+  }
+   
