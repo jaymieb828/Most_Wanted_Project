@@ -33,6 +33,7 @@ function app(people) {
                 //! TODO #4a: Provide option to search for single or multiple //////////////////////////////////////////
             searchResults = searchByTraits(people);
             break;
+    
         default:
             // Re-initializes the app() if neither case was hit above. This is an instance of recursion.
             app(people);
@@ -268,3 +269,55 @@ function displayDescendants(person, people){
      }
      
 }
+
+//trait search
+
+function searchByTrait(people){
+    let resultTrait = people;
+    do{
+      let searchTrait = promptFor('What trait would you like to search?\nGender\nWeight\nEye Color\nHeight\nOccupation',chars).toLowerCase();
+      switch(searchTrait){
+        case "height":
+            resultTrait = searchByHeight(resultTrait);
+            displayPeople(resultTrait);
+            break;  
+        case 'weight':
+            resultTrait =   searchByWeight(resultTrait);
+            displayPeople(resultTrait);
+            break;
+        case 'eye color':
+            resultTrait = searchByEyeColor(resultTrait);
+            displayPeople(resultTrait);
+            break;
+        
+        default:
+      }
+    }
+    while(resultTrait.length > 1);
+    return resultTrait
+
+function searchByHeight(people){
+    let height = promptFor("What is the person's height?", chars);
+    let foundPerson = people.filter(function(person){  
+      if(person.height == height){
+        return true;
+      }
+      else{
+        return false;
+      }
+    })
+    return foundPerson;
+  }
+  
+  function searchByWeight(people){
+    let weight = promptFor("What is the person's weight?", chars);
+    let foundPerson = people.filter(function(person){  
+      if(person.weight == weight){
+        return true;
+      }
+      else{
+        return false;
+      }
+    })
+    return foundPerson;
+  }
