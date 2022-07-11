@@ -71,28 +71,28 @@ function mainMenu(person, people) {
             break;
         case "family":
             //! TODO #2: Declare a findPersonFamily function //////////////////////////////////////////
-            // HINT: Look for a people-collection stringifier utility function to help
+           
         displayParents(person,people);
         displaySpouse(person, people);
         displaySiblings(person,people);
-        alert(person.people)
-            break;   
+        mainMenu(person.people);
+        break;   
         case "descendants":
             //! TODO #3: Declare a findPersonDescendants function //////////////////////////////////////////
-            // HINT: Review recursion lecture + demo for bonus user story
-            let personDescendants = findPersonDescendants(person[0], people);
-            alert(personDescendants);
-            break;
+        displayDescendants(person, people);
+        displayPeople(descenArray);
+        mainMenu(person, people);
+        break;
         case "restart":
             // Restart app() from the very beginning
             app(people);
-            break;
+        break;
         case "quit":
             // Stop application execution
-            return;
+        return;
         default:
             // Prompt user again. Another instance of recursion
-            return mainMenu(person, people);
+        return mainMenu(person, people);
     }
 }
 // End of mainMenu()
@@ -124,13 +124,9 @@ function searchByName(people) {
  * @param {Array} people        A collection of person objects.
  */
 function displayPeople(people) {
-    alert(
-        people
-            .map(function (person) {
-                return `${person.firstName} ${person.lastName}`;
-            })
-            .join("\n")
-    );
+    alert(people.map(function (person) {
+        return `${person.firstName} ${person.lastName}`;
+        }).join("\n"));
 }
 // End of displayPeople()
 
@@ -195,7 +191,6 @@ function chars(input) {
 
 //Family search functions.
 
-
 function displayFamilyInfo(foundPerson, relationship){
     if(foundPerson.length < 1){
       alert("This person has no " + relationship + ".");
@@ -205,6 +200,8 @@ function displayFamilyInfo(foundPerson, relationship){
      return relationship + ": " + person.firstName + " " + person.lastName;
    }).join("\n"));
     }}
+   
+
 
 function displaySpouse(person, people){
     let foundPerson = people.filter(function(el){
@@ -218,7 +215,7 @@ function displaySpouse(person, people){
       displayFamilyInfo(foundPerson,"Spouse")
   }
   
-function displaySiblings(person, people){
+  function displaySiblings(person, people){
     let foundPerson = people.filter(function(el){
     let parLength = el.parents
       if(el.id === person.id)
@@ -235,7 +232,7 @@ function displaySiblings(person, people){
       displayFamilyInfo(foundPerson,"Sibling")
   }
   
-function displayParents(person, people){
+  function displayParents(person, people){
     let foundPerson = people.filter(function(el){
       if(el.id === person.parents[0] || el.id === person.parents[1]){
         return true;
@@ -246,4 +243,28 @@ function displayParents(person, people){
     })
       displayFamilyInfo(foundPerson,"Parent")
   }
-   
+  
+
+let descenArray = [] 
+function displayDescendants(person, people){
+  let personsID = person.id;
+  let foundPerson = people.filter(function(person){
+  if(person.parents.includes(personsID)){
+    if(person != descenArray){
+      descenArray.push(person);
+      return true;
+    }
+    else{
+        return true
+    }
+  }
+  else{
+    return false;
+   }
+  })
+    for(let i = foundPerson.length - 1; i >= 0; i--){
+      displayDescendants(foundPerson[i],people);
+      
+     }
+     
+}
