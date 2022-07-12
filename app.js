@@ -149,7 +149,7 @@ function displayPerson(person) {
     personInfo += "Height: " + person.height + "\n";
     personInfo += "Occupation: " + person.occupation + "\n";
     personInfo += "Parents: " + person.parents + "\n";
-    personInfo += "Current Spouse " + person.currentSpouse + "\n";
+    
 //! TODO #1a: finish getting the rest of the information to display //////////////////////////////////////////
     alert(personInfo);
 }
@@ -299,7 +299,7 @@ function noResults(){
 function searchByTraits(people){
     let resultTrait = people;
     do{
-      let searchTrait = promptFor('What trait would you like to search?\nGender\nDate of Birth\nWeight\nEye Color\nHeight\nOccupation',chars).toLowerCase();
+      let searchTrait = promptFor('What trait would you like to search?\nGender\nDOB\nWeight\nEye Color\nHeight\nOccupation',chars).toLowerCase();
       switch(searchTrait){ 
         case 'gender':
             resultTrait = searchByGender(resultTrait);
@@ -310,8 +310,9 @@ function searchByTraits(people){
             displayPeople(resultTrait)
             break;
         case 'dob':
-            resultTrait = searchByAge(resultTrait);
+            resultTrait = searchByDob(resultTrait);
             displayPeople(resultTrait)
+            break;
         case 'weight':
             resultTrait = searchByWeight(resultTrait);
             displayPeople(resultTrait);
@@ -410,6 +411,18 @@ function searchByOccupation(people){
         return app(people);
     }
     return foundPerson;
-  }
+}
 
+function searchByDob(people){
+    let dob = promptFor("What is the person's dob?", chars);
+    let foundPerson = people.filter(function(el){
+    if(el.dob === dob){
+    return true;
+    }});
+    if(foundPerson === undefined || foundPerson.length === 0){
+        noResults();
+        return app(people);
+    }
+    return foundPerson;
+}
 
