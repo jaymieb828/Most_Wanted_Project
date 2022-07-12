@@ -143,6 +143,7 @@ function displayPerson(person) {
     let personInfo = `First Name: ${person.firstName}\n`;
     personInfo += `Last Name: ${person.lastName}\n`;
     personInfo += "Gender: " + person.gender + "\n";
+    personInfo += "DOB:" + person.dob + "\n";
     personInfo += "Weight: " + person.weight + "\n";
     personInfo += "Eye Color: " + person.eyeColor + "\n";
     personInfo += "Height: " + person.height + "\n";
@@ -288,31 +289,41 @@ function findPersonDescendants(person, people) {
 
 //trait search
 
+//no results function:
+
+function noResults(){
+    alert("Could not find a trait match!");
+  }
+  
+
 function searchByTraits(people){
     let resultTrait = people;
     do{
-      let searchTrait = promptFor('What trait would you like to search?\nGender\nWeight\nEye Color\nHeight\nOccupation',chars).toLowerCase();
+      let searchTrait = promptFor('What trait would you like to search?\nGender\nDate of Birth\nWeight\nEye Color\nHeight\nOccupation',chars).toLowerCase();
       switch(searchTrait){ 
         case 'gender':
-        resultTrait = searchByGender(resultTrait);
-        displayPeople(resultTrait);
-          break;
+            resultTrait = searchByGender(resultTrait);
+            displayPeople(resultTrait);
+            break;
+        case 'dob':
+            resultTrait = searchByAge(resultTrait);
+            displayPeople(resultTrait)
         case 'weight':
-          resultTrait =   searchByWeight(resultTrait);
-          displayPeople(resultTrait);
-          break;
+            resultTrait =   searchByWeight(resultTrait);
+            displayPeople(resultTrait);
+            break;
         case 'eye color':
-          resultTrait = searchByEyeColor(resultTrait);
-          displayPeople(resultTrait);
-          break;
+            resultTrait = searchByEyeColor(resultTrait);
+            displayPeople(resultTrait);
+            break;
         case "height":
-          resultTrait = searchByHeight(resultTrait);
-          displayPeople(resultTrait);
-          break;  
+            resultTrait = searchByHeight(resultTrait);
+            displayPeople(resultTrait);
+            break;  
         case "occupation":
-          resultTrait = searchByOccupation(resultTrait);
-          displayPeople(resultTrait);
-          break;
+            resultTrait = searchByOccupation(resultTrait);
+            displayPeople(resultTrait);
+            break;
         default:
       }
     }
@@ -320,56 +331,72 @@ function searchByTraits(people){
     return resultTrait
   }
 
-  function searchByHeight(people){
+function genderCheck(input){
+    return input.toLowerCase()  == "male" || input.toLowerCase() == "female";
+}
+
+function searchByGender(people){ 
+    let userChoice = promptFor("Is the person male or female?", genderCheck);
+    let foundPerson = people.filter(function(el){
+    if(el.gender === userChoice) {      
+    return true;
+    }});
+    if(foundPerson === undefined|| foundPerson.length === 0){
+        noResults();
+        return app(people);
+    }
+    return foundPerson;
+}
+function searchByHeight(people){
     let height = promptFor("What is the person's height?", chars);
-    let foundPerson = people.filter(function(person){  
-      if(person.height == height){
-        return true;
-      }
-      else{
-        return false;
-      }
-    })
+    let foundPerson = people.filter(function(el){  
+    if(el.height == height){d
+    return true;
+    }})
+    if(foundPerson === undefined || foundPerson.length === 0){
+        noResults();
+        return app(people);
+    }
     return foundPerson;
-  }
+}
   
-  function searchByWeight(people){
+function searchByWeight(people){
     let weight = promptFor("What is the person's weight?", chars);
-    let foundPerson = people.filter(function(person){  
-      if(person.weight == weight){
-        return true;
-      }
-      else{
-        return false;
-      }
-    })
+    let foundPerson = people.filter(function(el){  
+    if(el.weight == weight){
+    return true;
+    }})
+    if(foundPerson === undefined || foundPerson.length === 0){
+        noResults();
+        return app(people);
+    }
     return foundPerson;
-  }
+}
   
-  function searchByEyeColor(people){
+function searchByEyeColor(people){
     let eyeColor = promptFor("What is the person's eye color?", chars);
-    let foundPerson = people.filter(function(person){
-      if(person.eyeColor === eyeColor){
+    let foundPerson = people.filter(function(el){
+      if(el.eyeColor === eyeColor){
         return true;
+      }})
+      if(foundPerson === undefined || foundPerson.length === 0){
+        noResults();
+        return app(people);
       }
-      else{
-        return false;
-      }
-    })
-    // TODO: find the person using the trait they entered
     return foundPerson;
   }
   
-  function searchByOccupation(people){
+function searchByOccupation(people){
     let occupation = promptFor("What is the person's occupation?", chars);
-    let foundPerson = people.filter(function(person){
-      if(person.occupation === occupation){
+    let foundPerson = people.filter(function(el){
+      if(el.occupation === occupation){
         return true;
+      }});
+      if(foundPerson === undefined || foundPerson.length === 0){
+        noResults();
+        return app(people);
       }
-      else{
-        return false;
-      }
-    })
-    // TODO: find the person using the trait they entered
     return foundPerson;
   }
+//gender check function:
+
