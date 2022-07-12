@@ -280,11 +280,11 @@ function displayChildren(person, people) {
   }
 
 function findPersonDescendants(person, people) {
-    let foundPerson = displayChildren(person, people);
-    for(let i = 0; i < foundPerson.length; i++) {
-      foundPerson = foundPerson.concat(findPersonDescendants(foundPerson[i], people));
+    let foundDescendants = displayChildren(person, people);
+    for(let i = 0; i < foundDescendants.length; i++) {
+      foundDescendants = foundDescendants.concat(findPersonDescendants(foundDescendants[i], people));
     }
-    return foundPerson;
+    return foundDescendants;
   }
 
 //trait search
@@ -305,11 +305,15 @@ function searchByTraits(people){
             resultTrait = searchByGender(resultTrait);
             displayPeople(resultTrait);
             break;
+        case 'height':
+            resultTrait = searchByHeight(resultTrait);
+            displayPeople(resultTrait)
+            break;
         case 'dob':
             resultTrait = searchByAge(resultTrait);
             displayPeople(resultTrait)
         case 'weight':
-            resultTrait =   searchByWeight(resultTrait);
+            resultTrait = searchByWeight(resultTrait);
             displayPeople(resultTrait);
             break;
         case 'eye color':
@@ -329,7 +333,16 @@ function searchByTraits(people){
     }
     while(resultTrait.length > 1);
     return resultTrait
-  }
+}
+
+function numint(input){ 
+    if(parseInt(input)){
+      return true;
+    }
+    else{
+      return false;
+    }
+}
 
 function genderCheck(input){
     return input.toLowerCase()  == "male" || input.toLowerCase() == "female";
@@ -348,9 +361,9 @@ function searchByGender(people){
     return foundPerson;
 }
 function searchByHeight(people){
-    let height = promptFor("What is the person's height?", chars);
+    let height = promptFor("What is the person's height?", numint);
     let foundPerson = people.filter(function(el){  
-    if(el.height == height){d
+    if(el.height == height){
     return true;
     }})
     if(foundPerson === undefined || foundPerson.length === 0){
@@ -361,7 +374,7 @@ function searchByHeight(people){
 }
   
 function searchByWeight(people){
-    let weight = promptFor("What is the person's weight?", chars);
+    let weight = promptFor("What is the person's weight?", numint);
     let foundPerson = people.filter(function(el){  
     if(el.weight == weight){
     return true;
@@ -376,27 +389,27 @@ function searchByWeight(people){
 function searchByEyeColor(people){
     let eyeColor = promptFor("What is the person's eye color?", chars);
     let foundPerson = people.filter(function(el){
-      if(el.eyeColor === eyeColor){
-        return true;
-      }})
-      if(foundPerson === undefined || foundPerson.length === 0){
+    if(el.eyeColor === eyeColor){
+    return true;
+    }})
+    if(foundPerson === undefined || foundPerson.length === 0){
         noResults();
         return app(people);
-      }
+    }
     return foundPerson;
-  }
+}
   
 function searchByOccupation(people){
     let occupation = promptFor("What is the person's occupation?", chars);
     let foundPerson = people.filter(function(el){
-      if(el.occupation === occupation){
-        return true;
-      }});
-      if(foundPerson === undefined || foundPerson.length === 0){
+    if(el.occupation === occupation){
+    return true;
+    }});
+    if(foundPerson === undefined || foundPerson.length === 0){
         noResults();
         return app(people);
-      }
+    }
     return foundPerson;
   }
-//gender check function:
+
 
