@@ -33,7 +33,6 @@ function app(people) {
                 //! TODO #4a: Provide option to search for single or multiple //////////////////////////////////////////
             searchResults = searchByTraits(people);
             break;
-    
         default:
             // Re-initializes the app() if neither case was hit above. This is an instance of recursion.
             app(people);
@@ -72,28 +71,28 @@ function mainMenu(person, people) {
             break;
         case "family":
             //! TODO #2: Declare a findPersonFamily function //////////////////////////////////////////
-           
-        displayParents(person,people);
-        displaySpouse(person, people);
-        displaySiblings(person,people);
-        mainMenu(person.people);
-        break;   
+            // HINT: Look for a people-collection stringifier utility function to help
+            let personFamily = findPersonFamily(person[0], people);
+            console.log(personFamily);
+            alert(personFamily);
+            break;
         case "descendants":
             //! TODO #3: Declare a findPersonDescendants function //////////////////////////////////////////
-        displayDescendants(person, people);
-        displayPeople(descenArray);
-        mainMenu(person, people);
-        break;
+            // HINT: Review recursion lecture + demo for bonus user story
+            let personDescendants = findPersonDescendants(person[0], people);
+            console.log(personDescendants);
+            alert(person[0].firstName + " " + person[0].lastName + "'s descendants: \n\n" + displayPeople(findPersonDescendants(person[0], people)));
+            break;
         case "restart":
             // Restart app() from the very beginning
             app(people);
-        break;
+            break;
         case "quit":
             // Stop application execution
-        return;
+            return;
         default:
             // Prompt user again. Another instance of recursion
-        return mainMenu(person, people);
+            return mainMenu(person, people);
     }
 }
 // End of mainMenu()
@@ -125,9 +124,13 @@ function searchByName(people) {
  * @param {Array} people        A collection of person objects.
  */
 function displayPeople(people) {
-    alert(people.map(function (person) {
-        return `${person.firstName} ${person.lastName}`;
-        }).join("\n"));
+    alert(
+        people
+            .map(function (person) {
+                return `${person.firstName} ${person.lastName}`;
+            })
+            .join("\n")
+    );
 }
 // End of displayPeople()
 
@@ -137,8 +140,8 @@ function displayPeople(people) {
  * @param {Object} person       A singular object.
  */
 function displayPerson(person) {
-    let personInfo = "First Name: " + person.firstName + "\n";
-    personInfo += "Last Name: " + person.lastName + "\n";
+    let personInfo = `First Name: ${person.firstName}\n`;
+    personInfo += `Last Name: ${person.lastName}\n`;
     personInfo += "Gender: " + person.gender + "\n";
     personInfo += "Weight: " + person.weight + "\n";
     personInfo += "Eye Color: " + person.eyeColor + "\n";
@@ -146,6 +149,7 @@ function displayPerson(person) {
     personInfo += "Occupation: " + person.occupation + "\n";
     personInfo += "Parents: " + person.parents + "\n";
     personInfo += "Current Spouse " + person.currentSpouse + "\n";
+//! TODO #1a: finish getting the rest of the information to display //////////////////////////////////////////
     alert(personInfo);
 }
 // End of displayPerson()
@@ -190,18 +194,36 @@ function chars(input) {
 //////////////////////////////////////////* End Of Starter Code *//////////////////////////////////////////
 // Any additional functions can be written below this line 👇. Happy Coding! 😁
 
-//Family search functions.
+//family search
 
-function displayFamilyInfo(foundPerson, relationship){
-    if(foundPerson.length < 1){
-      alert("This person has no " + relationship + ".");
+//modified search with help from Semi!!! TY Semi!!!
+
+function findPersonFamily (person, people) {
+    let foundPerson = "";                         
+    let siblings = displaySiblings(person, people);
+    let spouse = displaySpouse(person, people);
+    let parents = displayParents(person, people);
+  
+    if (siblings != null) {
+      for(let i = 0; i < siblings.length; i ++){
+        foundPerson += `sibling: ${siblings[i].firstName} ${siblings[i].lastName}\n`
+      }
     }
-    else{
-    alert(foundPerson.map(function(person){
-     return relationship + ": " + person.firstName + " " + person.lastName;
-   }).join("\n"));
-    }}
-   
+  
+    if (spouse != null) {
+      for(let i = 0; i < spouse.length; i ++){
+        foundPerson += `spouse: ${spouse[i].firstName} ${spouse[i].lastName}\n`
+      }
+    }
+  
+    if (parents != null) {
+      for(let i = 0; i < parents.length; i ++) {
+        foundPerson += `parents: ${parents[i].firstName} ${parents[i].lastName}\n`
+      }
+    }
+  
+    return foundPerson;
+  }
 
 
 function displaySpouse(person, people){
@@ -212,11 +234,11 @@ function displaySpouse(person, people){
       else{
         return false;
       }
-    })
-      displayFamilyInfo(foundPerson,"Spouse")
-  }
+    });
+    return foundPerson
+}
   
-  function displaySiblings(person, people){
+function displaySiblings(person, people){
     let foundPerson = people.filter(function(el){
     let parLength = el.parents
       if(el.id === person.id)
@@ -229,11 +251,11 @@ function displaySpouse(person, people){
       else{
         return false;
       }
-    })
-      displayFamilyInfo(foundPerson,"Sibling")
-  }
+    });
+    return foundPerson
+}
   
-  function displayParents(person, people){
+function displayParents(person, people){
     let foundPerson = people.filter(function(el){
       if(el.id === person.parents[0] || el.id === person.parents[1]){
         return true;
@@ -241,62 +263,64 @@ function displaySpouse(person, people){
       else{
         return false;
       }
-    })
-      displayFamilyInfo(foundPerson,"Parent")
-  }
-  
-
-let descenArray = [] 
-function displayDescendants(person, people){
-  let personsID = person.id;
-  let foundPerson = people.filter(function(person){
-  if(person.parents.includes(personsID)){
-    if(person != descenArray){
-      descenArray.push(person);
-      return true;
-    }
-    else{
-        return true
-    }
-  }
-  else{
-    return false;
-   }
-  })
-    for(let i = foundPerson.length - 1; i >= 0; i--){
-      displayDescendants(foundPerson[i],people);
-      
-     }
-     
+    });
+    return foundPerson
+    
 }
+
+function displayChildren(person, people) {
+    let foundPerson = people.filter(function(el) {
+      for (let i = 0; i < el.parents.length; i++)
+        if(el.parents[i] == person.id ) {
+          return true;
+      }
+    });
+    return foundPerson;
+  }
+
+function findPersonDescendants(person, people) {
+    let foundPerson = displayChildren(person, people);
+    for(let i = 0; i < foundPerson.length; i++) {
+      foundPerson = foundPerson.concat(findPersonDescendants(foundPerson[i], people));
+    }
+    return foundPerson;
+  }
 
 //trait search
 
-function searchByTrait(people){
+function searchByTraits(people){
     let resultTrait = people;
     do{
       let searchTrait = promptFor('What trait would you like to search?\nGender\nWeight\nEye Color\nHeight\nOccupation',chars).toLowerCase();
-      switch(searchTrait){
-        case "height":
-            resultTrait = searchByHeight(resultTrait);
-            displayPeople(resultTrait);
-            break;  
+      switch(searchTrait){ 
+        case 'gender':
+        resultTrait = searchByGender(resultTrait);
+        displayPeople(resultTrait);
+          break;
         case 'weight':
-            resultTrait =   searchByWeight(resultTrait);
-            displayPeople(resultTrait);
-            break;
+          resultTrait =   searchByWeight(resultTrait);
+          displayPeople(resultTrait);
+          break;
         case 'eye color':
-            resultTrait = searchByEyeColor(resultTrait);
-            displayPeople(resultTrait);
-            break;
-        
+          resultTrait = searchByEyeColor(resultTrait);
+          displayPeople(resultTrait);
+          break;
+        case "height":
+          resultTrait = searchByHeight(resultTrait);
+          displayPeople(resultTrait);
+          break;  
+        case "occupation":
+          resultTrait = searchByOccupation(resultTrait);
+          displayPeople(resultTrait);
+          break;
         default:
       }
     }
     while(resultTrait.length > 1);
     return resultTrait
+  }
 
-function searchByHeight(people){
+  function searchByHeight(people){
     let height = promptFor("What is the person's height?", chars);
     let foundPerson = people.filter(function(person){  
       if(person.height == height){
@@ -319,5 +343,33 @@ function searchByHeight(people){
         return false;
       }
     })
+    return foundPerson;
+  }
+  
+  function searchByEyeColor(people){
+    let eyeColor = promptFor("What is the person's eye color?", chars);
+    let foundPerson = people.filter(function(person){
+      if(person.eyeColor === eyeColor){
+        return true;
+      }
+      else{
+        return false;
+      }
+    })
+    // TODO: find the person using the trait they entered
+    return foundPerson;
+  }
+  
+  function searchByOccupation(people){
+    let occupation = promptFor("What is the person's occupation?", chars);
+    let foundPerson = people.filter(function(person){
+      if(person.occupation === occupation){
+        return true;
+      }
+      else{
+        return false;
+      }
+    })
+    // TODO: find the person using the trait they entered
     return foundPerson;
   }
